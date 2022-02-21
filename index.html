@@ -420,6 +420,12 @@
                     siteScope.document.styleSheets[0].insertRule('.LandbotLivechat {right: 60px !important}'); //You can add this css rule in your site
                     ;
                 </script>
+                <script>
+                    var landbotScope = this;
+                    this.onLoad(function() { // This Css rule can only applied once Landbot script is loaded
+                        landbotScope.document.styleSheets[0].insertRule('.LivechatProactive .Message[data-type=text] .MessageBubble { background-color: red !important}');
+                    })
+                </script>
 </body>
 
 </html>

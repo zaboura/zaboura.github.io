@@ -51,20 +51,6 @@
       color: white;
     }
 
-    /* ============================================
-       CURSOR GLOW
-    ============================================ */
-    .cursor-glow {
-      position: fixed;
-      width: 420px;
-      height: 420px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(106, 123, 255, 0.06) 0%, transparent 65%);
-      pointer-events: none;
-      z-index: 0;
-      transform: translate(-50%, -50%);
-      transition: left 0.35s ease, top 0.35s ease;
-    }
 
     /* ============================================
        NAVIGATION
@@ -603,17 +589,54 @@
     .tech-card:hover::before { opacity: 0.05; }
 
     .tech-icon {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 1.25rem;
-      border-radius: 16px;
-      background: rgba(108, 99, 255, 0.1);
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 1.4rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.75rem;
       position: relative;
       z-index: 1;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .tech-card:hover .tech-icon {
+      transform: scale(1.1) translateY(-3px);
+      background: rgba(94, 114, 228, 0.1);
+      border-color: rgba(94, 114, 228, 0.25);
+    }
+
+    .tech-icon img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+      filter: drop-shadow(0 3px 10px rgba(94, 114, 228, 0.22));
+      transition: filter 0.35s ease;
+    }
+
+    .tech-card:hover .tech-icon img {
+      filter: drop-shadow(0 4px 18px rgba(94, 114, 228, 0.55)) brightness(1.1);
+    }
+
+    [data-theme="light"] .tech-icon {
+      background: rgba(79, 99, 210, 0.05);
+      border-color: rgba(79, 99, 210, 0.12);
+    }
+
+    [data-theme="light"] .tech-card:hover .tech-icon {
+      background: rgba(79, 99, 210, 0.1);
+      border-color: rgba(79, 99, 210, 0.28);
+    }
+
+    [data-theme="light"] .tech-icon img {
+      filter: drop-shadow(0 2px 8px rgba(79, 99, 210, 0.2));
+    }
+
+    [data-theme="light"] .tech-card:hover .tech-icon img {
+      filter: drop-shadow(0 4px 16px rgba(79, 99, 210, 0.45)) brightness(1.05);
     }
 
     .tech-card h4 {
@@ -678,9 +701,13 @@
     ============================================ */
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 2rem;
       margin-top: 4rem;
+    }
+
+    @media (max-width: 1100px) {
+      .projects-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     .project-card {
@@ -1273,14 +1300,108 @@
       .tech-card { padding: 1.25rem 0.75rem; }
       .hero-scroll { display: none; }
     }
+
+    /* ============================================
+       CARD SPOTLIGHT EFFECT
+    ============================================ */
+    .tech-card, .expertise-card, .project-card {
+      --spot-x: 50%;
+      --spot-y: 50%;
+    }
+
+    .tech-card .card-spotlight,
+    .expertise-card .card-spotlight,
+    .project-card .card-spotlight {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      background: radial-gradient(circle at var(--spot-x) var(--spot-y),
+        rgba(255, 255, 255, 0.07) 0%,
+        transparent 60%);
+      z-index: 2;
+    }
+
+    .tech-card:hover .card-spotlight,
+    .expertise-card:hover .card-spotlight,
+    .project-card:hover .card-spotlight {
+      opacity: 1;
+    }
+
+    /* ============================================
+       CUSTOM CURSOR
+    ============================================ */
+    .has-custom-cursor,
+    .has-custom-cursor * { cursor: none !important; }
+
+    .cursor-dot {
+      position: fixed;
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10001;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, opacity 0.3s ease;
+    }
+
+    .cursor-ring {
+      position: fixed;
+      width: 34px;
+      height: 34px;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      opacity: 0.55;
+      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.35s ease,
+                  background 0.35s ease,
+                  border-color 0.35s ease;
+    }
+
+    .cursor-ring.is-hovering {
+      width: 52px;
+      height: 52px;
+      opacity: 0.25;
+      background: var(--accent);
+      border-color: transparent;
+    }
+
+    .cursor-ring.is-clicking {
+      width: 26px;
+      height: 26px;
+      opacity: 0.7;
+    }
+
+    @media (hover: none) {
+      .cursor-dot, .cursor-ring { display: none; }
+    }
+
+    /* ============================================
+       MAGNETIC BUTTON BASE
+    ============================================ */
+    .btn-primary, .btn-secondary, .nav-cta {
+      will-change: transform;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.3s ease,
+                  background 0.3s ease,
+                  border-color 0.3s ease;
+    }
   </style>
 </head>
 <body>
   <!-- Page transition -->
   <div class="page-transition"></div>
 
-  <!-- Cursor glow -->
-  <div class="cursor-glow" id="cursorGlow"></div>
+  <!-- Custom cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
   <!-- Navigation -->
   <nav class="nav" id="navbar">
@@ -1516,6 +1637,17 @@
             <div class="project-arrow">View Project <span>&rarr;</span></div>
           </div>
         </a>
+        <a href="https://github.com/zaboura/vertica-mcp" target="_blank" class="project-card reveal reveal-delay-3">
+          <div class="project-image">
+            <img src="assets/img/bg_image_2.jpg" alt="Vertica MCP Server">
+          </div>
+          <div class="project-body">
+            <div class="project-tag">AI & Database Engineering</div>
+            <h3>Vertica MCP Server</h3>
+            <div class="date">2025</div>
+            <div class="project-arrow">View Project <span>&rarr;</span></div>
+          </div>
+        </a>
       </div>
     </div>
   </section>
@@ -1643,12 +1775,102 @@
     });
 
     // ============================================
-    // CURSOR GLOW
+    // CUSTOM CURSOR
     // ============================================
-    const glow = document.getElementById('cursorGlow');
+    const cursorDot  = document.getElementById('cursorDot');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0;
+    let ringX  = 0, ringY  = 0;
+    let isTouch = false;
+
+    if ('ontouchstart' in window) {
+      isTouch = true;
+    } else {
+      document.body.classList.add('has-custom-cursor');
+    }
+
     document.addEventListener('mousemove', (e) => {
-      glow.style.left = e.clientX + 'px';
-      glow.style.top = e.clientY + 'px';
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.left = mouseX + 'px';
+      cursorDot.style.top  = mouseY + 'px';
+    });
+
+    // Smoothly lerp the ring behind the dot
+    (function animateRing() {
+      ringX += (mouseX - ringX) * 0.11;
+      ringY += (mouseY - ringY) * 0.11;
+      cursorRing.style.left = ringX + 'px';
+      cursorRing.style.top  = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    })();
+
+    document.addEventListener('mouseleave', () => {
+      cursorDot.style.opacity  = '0';
+      cursorRing.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', () => {
+      cursorDot.style.opacity  = '1';
+      cursorRing.style.opacity = '0.55';
+    });
+
+    // Hover state — ring expands into a filled bubble
+    document.querySelectorAll('a, button, .tech-card, .project-card, .expertise-card, .contact-link').forEach(el => {
+      el.addEventListener('mouseenter', () => cursorRing.classList.add('is-hovering'));
+      el.addEventListener('mouseleave', () => cursorRing.classList.remove('is-hovering'));
+    });
+
+    // Click flash
+    document.addEventListener('mousedown', () => cursorRing.classList.add('is-clicking'));
+    document.addEventListener('mouseup',   () => cursorRing.classList.remove('is-clicking'));
+
+    // ============================================
+    // MAGNETIC BUTTONS
+    // ============================================
+    document.querySelectorAll('.btn-primary, .btn-secondary, .nav-cta, .btn-submit').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const r  = btn.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width  / 2);
+        const dy = e.clientY - (r.top  + r.height / 2);
+        btn.style.transform = `translate(${dx * 0.28}px, ${dy * 0.28}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+
+    // ============================================
+    // 3D CARD TILT
+    // ============================================
+    document.querySelectorAll('.project-card, .expertise-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const r   = card.getBoundingClientRect();
+        const x   = e.clientX - r.left;
+        const y   = e.clientY - r.top;
+        const cx  = r.width  / 2;
+        const cy  = r.height / 2;
+        const rotX = ((y - cy) / cy) * -7;
+        const rotY = ((x - cx) / cx) *  7;
+        card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-6px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+
+    // ============================================
+    // CARD SPOTLIGHT (inject + track)
+    // ============================================
+    document.querySelectorAll('.tech-card, .expertise-card, .project-card').forEach(card => {
+      const spot = document.createElement('div');
+      spot.className = 'card-spotlight';
+      card.appendChild(spot);
+
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--spot-x', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--spot-y', (e.clientY - r.top)  + 'px');
+      });
     });
 
     // ============================================
@@ -1677,12 +1899,9 @@
     const reveals = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
+        if (entry.isIntersecting) entry.target.classList.add('active');
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
     reveals.forEach(el => revealObserver.observe(el));
 
     // ============================================
@@ -1692,9 +1911,7 @@
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
 
@@ -1704,8 +1921,7 @@
     window.addEventListener('scroll', () => {
       const scrolled = window.scrollY;
       document.querySelectorAll('.hero-orb').forEach((orb, i) => {
-        const speed = (i + 1) * 0.05;
-        orb.style.transform = `translateY(${scrolled * speed}px)`;
+        orb.style.transform = `translateY(${scrolled * (i + 1) * 0.05}px)`;
       });
     });
 
